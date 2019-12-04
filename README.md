@@ -14,7 +14,14 @@ Base de datos final generada en MATLAB con el cambio de variables categórica a 
 Corresponde al codigo en el que se implementó análisis estadístico, visualización y preprocesamiento de la base de datos DAtabaseNorepos.
 
 ## NNneuronas.py
-Implementación en python de una red neuronal en la que se puede cambiar el numero de neuronas y evaluar la precisión del modelo con datos para test.
+Implementación en python de una red neuronal en la que se puede cambiar el numero de neuronas y evaluar la precisión del modelo con datos de prueba.
+
+## NNcapas.py
+Implementación en python de una red neuronal en la que se puede cambiar el numero de capas y evaluar la precisión del modelo con datos de prueba.
+
+## MLPfromScratch.py
+Implementación python de una perceptron multicapa generalizable sin librerías para clasificación multiclase.
+
 
 
 
