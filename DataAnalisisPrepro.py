@@ -1,4 +1,3 @@
-#Tomado de: https://machinelearningmastery.com/how-to-control-neural-network-model-capacity-with-nodes-and-layers/
 # Visualize training history
 # multi-class classification with Keras
 import pandas
@@ -29,6 +28,48 @@ from keras.utils import to_categorical
 
 # Cargar los datos
 dataframe = pandas.read_csv("/home/bessel/Desktop/DatosIA/DatabaseNoRepos012.csv", header=0)
+ 
+#Encontrar correlación de los datos mediante el metodo Pearson
+Correlacion_data= dataframe.corr(method="pearson")
+
+#Graficar matriz de correlación de los datos
+corrmat = dataframe.corr(method='spearman') 
+f, ax = pyplot.subplots(figsize =(19, 15)) 
+sns.heatmap(corrmat, ax = ax, cmap ="YlGnBu", linewidths = 0.1) 
+
+
+#Determinar si los datos se encuentran balancedos
+count_class= dataframe.groupby('Clase').size()
+
+#Descripción estadistica de los datos
+Describe_Data= dataframe.describe()
+
+#Inclinacion de la distribución Gaussiana
+Inclinacion = dataframe.skew()
+
+
+##Distribución
+
+g = sns.pairplot(dataframe, height=3, diag_kind="kde", vars=["feature66", "feature135",  "feature120"])
+#dataframe.hist(column='feature135', color='steelblue', edgecolor='black', linewidth=1.0,
+#           xlabelsize=8, ylabelsize=8, grid=False)    
+#pyplot.tight_layout(rect=(0, 0, 1.2, 1.2)) 
+##
+#dataframe.hist(column='feature66', color='steelblue', edgecolor='black', linewidth=1.0,
+#           xlabelsize=8, ylabelsize=8, grid=False)    
+#pyplot.tight_layout(rect=(0, 0, 1.2, 1.2)) 
+
+#dataframe.plot(kind='density', subplots=True, layout=(139,139), sharex=False)
+#pyplot.show()
+
+
+#g = sns.pairplot(dataframe, hue="Clase")
+#g = sns.pairplot(dataframe, height=3, diag_kind="kde", vars=["])
+
+
+#Cajas
+dataframe.plot(kind = 'box', subplots = True, layout = (139,139), sharex = False,sharey = False)
+pyplot.show()
 
 #Separa los datos que corresponden a las características y a las Etiquetas
 dataset = dataframe.values
@@ -38,6 +79,7 @@ Y = np_utils.to_categorical(Yn)
 scaler = Normalizer('l2').fit(X)
 X_normalized = scaler.transform(X)
 
+#Separar los datos entrenamiento y validación 60-40
 #Separar los datos entrenamiento y validación 60-40
 X_train, X_test, y_train, y_test = train_test_split(X_normalized, Yn, test_size=0.4, random_state=42)
 
@@ -53,50 +95,7 @@ y_test1 = np_utils.to_categorical(y_test)
 
 #print(sorted(Counter(y_train).items()))
 cc = ClusterCentroids(random_state=0)
-X_train2, y_train2 = cc.fit_sample(X_train, y_train)
+X_train2, Y_train2 = cc.fit_sample(X_train, y_train)
 #print(sorted(Counter(y_resampled).items()) 
-y_train2 = np_utils.to_categorical(y_train2)
+y_train2 = np_utils.to_categorical(Y_train2)
 y_test2 = np_utils.to_categorical(y_test)
- 
-# define baseline model
-
-# study of mlp learning curves given different number of nodes for multi-class classification
-
-
-
-
-# fit model with given number of nodes, returns test set accuracy
-def evaluate_model(n_nodes, X_train1, y_train1, X_test, y_test1):
-	# configure the model based on the data
-	n_input, n_classes = X_train1.shape[1], y_train1.shape[1]
-	# define model
-	model = Sequential()
-	model.add(Dense(n_nodes, input_dim=n_input, activation='relu', kernel_initializer='he_uniform'))
-	model.add(Dense(n_classes, activation='softmax'))
-	# compile model
-	opt = SGD(lr=0.01, momentum=0.9)
-	model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
-	# fit model on train set
-	history = model.fit(X_train1, y_train1, epochs=100, verbose=0)
-	# evaluate model on test set
-	_, test_acc = model.evaluate(X_test, y_test1, verbose=0)
-	return history, test_acc
-
-# prepare dataset
-
-# evaluate model and plot learning curve with given number of nodes
-num_nodes = [5, 10, 15, 20, 25]
-for n_nodes in num_nodes:
-	# evaluate model with a given number of nodes
-	history, result = evaluate_model(n_nodes, X_train1, y_train1, X_test, y_test1)
-	# summarize final test set accuracy
-	print('nodes=%d: %.3f' % (n_nodes, result))
-	# plot learning curve
-	pyplot.plot(history.history['loss'], label=str(n_nodes))
-
-    
-# show the plot
-pyplot.ylabel("Pérdida")
-pyplot.xlabel("Época")
-pyplot.legend()
-pyplot.show()
