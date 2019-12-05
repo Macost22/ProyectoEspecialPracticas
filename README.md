@@ -22,6 +22,9 @@ Implementación en python de una red neuronal en la que se puede cambiar el nume
 ## MLPfromScratch.py
 Implementación python de una perceptron multicapa generalizable sin librerías para clasificación multiclase.
 
+## Arbol.py
+Implementación de Arbol de decisión ṕara clasificar la base de datos LMDHG y generar métricas para validación del modelo.
+
 
 
 
